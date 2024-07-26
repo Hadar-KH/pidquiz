@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PID Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+        }
+        .question {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+        .options li {
+            background: #f9f9f9;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .options li:hover {
+            background: #e9e9e9;
+        }
+        .correct {
+            background-color: #4CAF50 !important;
+            color: white;
+        }
+        .incorrect {
+            background-color: #F44336 !important;
+            color: white;
+        }
+        .explanation {
+            display: none;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div id="quiz"></div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "What are the predominant organisms responsible for Pelvic Inflammatory Disease (PID)?",
+                a: "Staphylococcus and Streptococcus",
+                b: "Mycoplasma and Escherichia coli",
+                c: "Clostridium and Actinomyces",
+                d: "C. trachomatis and N. gonorrhoeae",
+                correct: "d",
+                explanation: "C. trachomatis and N. gonorrhoeae are the primary organisms causing PID."
+            },
+            {
+                question: "Which factor is the greatest risk factor for developing PID?",
+                a: "Adolescence",
+                b: "Having multiple sexual partners",
+                c: "Prior PID",
+                d: "Not using condoms",
+                correct: "c",
+                explanation: "Prior PID is the greatest risk factor for developing PID."
+            },
+            {
+                question: "What is the main focus of inpatient management for PID?",
+                a: "Surgical intervention",
+                b: "High-dose intravenous (IV) antibiotic therapy",
+                c: "Oral contraceptives",
+                d: "Use of condoms",
+                correct: "b",
+                explanation: "High-dose intravenous (IV) antibiotic therapy is the main focus of inpatient management for PID."
+            },
+            {
+                question: "Which condition is associated with peritoneal involvement in PID and is often caused by chlamydial infection?",
+                a: "Tubo-ovarian abscess (TOA)",
+                b: "Fitz-Hugh-Curtis syndrome",
+                c: "Ectopic pregnancy",
+                d: "Cervical motion tenderness",
+                correct: "b",
+                explanation: "Fitz-Hugh-Curtis syndrome is associated with peritoneal involvement in PID and is often caused by chlamydial infection."
+            },
+            {
+                question: "What is the recommended antibiotic combination for hospitalized PID patients according to UPTODATE in the presentation?",
+                a: "Intravenous ceftriaxone, azithromycin, and metronidazole",
+                b: "Intravenous ceftriaxone, doxycycline, and metronidazole",
+                c: "Intravenous ceftriaxone, ciprofloxacin, and metronidazole",
+                d: "Intravenous ceftriaxone, doxycycline, and clindamycin",
+                correct: "b",
+                explanation: "The recommended antibiotic combination for hospitalized PID patients is intravenous ceftriaxone, doxycycline, and metronidazole according to UPTODATE."
+            },
+            {
+                question: "What is a primary indication for hospitalization and initiation of a parenteral regimen in PID patients?",
+                a: "Mild pelvic pain",
+                b: "Severe clinical illness with fever ≥38.5°C, nausea, and vomiting",
+                c: "Slight vaginal discharge",
+                d: "Regular menstrual cycle",
+                correct: "b",
+                explanation: "Severe clinical illness with fever ≥38.5°C, nausea, and vomiting indicates the need for hospitalization and a parenteral regimen."
+            },
+            {
+                question: "Which of the following is part of the parenteral regimen for hospitalized PID patients?",
+                a: "Ceftriaxone IM plus azithromycin",
+                b: "Cefotetan IV plus doxycycline",
+                c: "Cefoxitin IV plus azithromycin",
+                d: "Metronidazole plus ciprofloxacin",
+                correct: "b",
+                explanation: "Cefotetan IV plus doxycycline is part of the parenteral regimen for hospitalized PID patients."
+            },
+            {
+                question: "How long should the parenteral regimen be continued for hospitalized PID patients?",
+                a: "Until symptoms disappear completely",
+                b: "Until 24-48 hours of sustained clinical improvement",
+                c: "For a minimum of 7 days",
+                d: "For a maximum of 5 days",
+                correct: "b",
+                explanation: "The parenteral regimen should be continued until 24-48 hours of sustained clinical improvement."
+            },
+            {
+                question: "What is the recommended oral outpatient regimen after transitioning from a parenteral regimen?",
+                a: "Doxycycline alone",
+                b: "Metronidazole alone",
+                c: "Doxycycline plus metronidazole",
+                d: "Azithromycin plus ciprofloxacin",
+                correct: "c",
+                explanation: "The recommended oral outpatient regimen after transitioning is doxycycline plus metronidazole to complete a 14-day course."
+            },
+            {
+                question: "Which of the following is an appropriate outpatient treatment for PID in patients who do not require hospitalization?",
+                a: "Ceftriaxone IM single dose plus doxycycline for 14 days plus metronidazole for 14 days",
+                b: "Ceftriaxone IV plus doxycycline plus metronidazole",
+                c: "Cefotetan IV plus doxycycline",
+                d: "Cefoxitin IV plus doxycycline",
+                correct: "a",
+                explanation: "The appropriate outpatient treatment includes ceftriaxone IM single dose plus doxycycline for 14 days plus metronidazole for 14 days."
+            }
+        ];
+
+        const quizContainer = document.getElementById('quiz');
+
+        quizData.forEach((q, index) => {
+            const questionElement = document.createElement('div');
+            questionElement.classList.add('question');
+            questionElement.innerHTML = `<h3>Question ${index + 1}: ${q.question}</h3>
+                <ul class="options">
+                    <li data-option="a">${q.a}</li>
+                    <li data-option="b">${q.b}</li>
+                    <li data-option="c">${q.c}</li>
+                    <li data-option="d">${q.d}</li>
+                </ul>
+                <div class="explanation">${q.explanation}</div>`;
+            quizContainer.appendChild(questionElement);
+
+            const options = questionElement.querySelectorAll('.options li');
+            options.forEach(option => {
+                option.addEventListener('click', () => {
+                    const selectedOption = option.getAttribute('data-option');
+                    if (selectedOption === q.correct) {
+                        option.classList.add('correct');
+                    } else {
+                        option.classList.add('incorrect');
+                        questionElement.querySelector(`[data-option="${q.correct}"]`).classList.add('correct');
+                    }
+                    questionElement.querySelector('.explanation').style.display = 'block';
+                    options.forEach(opt => opt.style.pointerEvents = 'none');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
